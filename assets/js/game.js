@@ -7,11 +7,6 @@ var enemyNames = ['Roborto', 'Amy Android', 'Robo Trumble'];
 var enemyHealth = 50;
 var enemyAttack = 12;
 
-console.log(enemyNames);
-console.log(enemyNames.length);
-console.log(enemyNames[0]);
-console.log(enemyNames[3]);
-
 // fight function (now with parameter for enemy's name)
 var fight = function(enemyName) {
   while (playerHealth > 0 && enemyHealth > 0) {
@@ -86,14 +81,23 @@ var startGame = function() {
             var pickedEnemyName = enemyNames[i];
 
             // reset enemyHealth before starting new fight
-            enemyHealth = 50;
-
-            // use debugger to pause script from running and check what's going on at that moment in the code
-            // debugger;
+            enemyHealth = 50
 
             // pass the pickedEnemyName variable's value into the fight function, where it will assume the value of the enemyName parameter
             fight(pickedEnemyName);
         }
+        //if player is still alive and we're not at the last enemy in the array
+        if(playerHealth > 0 && i < enemyNames.length - 1) {
+          shop();
+          //ask if player wants to use the store beofre next round
+          var storeConfirm = window.confirm("The fight is over, visit the store before the next round?");
+
+          //if yes, take them to the store() function
+          if (storeCofirm) {
+            shop();
+          }
+        }
+
         // if player isn't alive, stop the game
         else {
             window.alert('You have lost your robot in battle! Game Over!');
@@ -102,9 +106,8 @@ var startGame = function() {
     }
     //after the loop ends, player is either out of health or enemies to fight, so run the endGame function
     endGame();
-    //play again
-    startGame();
 };
+
 
 //function to end the entire game
 var endGame = function() {
@@ -116,20 +119,72 @@ var endGame = function() {
   else {
     window.alert("You've lost your robot in battle.");
   }
+
+  //ask player if they'd like to play again
+  var playAgainConfirm = window.confirm("Would you like to play again?");
+
+  if (playAgainConfirm) {
+    //restart the game
+    startGame();
+  }
+  else {
+    window.alert("Thank you for playing Robot Gladiators! Come back soon!");
+  }
 };
 
-//ask player if they'd like to play again
-var playAgainConfirm = window.confirm("Would you like to play again?");
+  var shop = function () { 
+    //ask player what they'd like to do
+    var shopOptionPrompt = window.prompt(
+      "Would you like to REFILL your health, UPGRADE your attack, or LEAVE the store? Please enter one: 'Refill', 'Upgrade', or 'Leave' to make a choice."
+    );
 
-if (playAgainConfirm) {
-  //restart the game
-  startGame();
-}
-else {
-  window.alert("Thank you for playing Robot Gladiators! Come back soon!");
-}
+    //use switch to carry our action
+    switch (shopOptionPrompt) {
+      case "REFILL": // new case
+      case "refill":
+        if(playerMoney >= 7) {
+        window.alert("Refilling player's healthy by 20 for 7 dollars.");
 
-//start the game when the page loads
+        //increase healtha nd decrease money
+        playerHealth = playerHealth + 20;
+        playerMoney = playerMoney - 7;
+        }
+        else {
+          window.alert("You don't have enough money!");
+        }
+
+        break;
+        case "UPGRADE":
+        case "upgrade":
+          if (playerMoney >= 7) {
+          window.alert("Upgrading player's atack by 6 for 7 dollars.");
+
+        //increase attache and decrease money
+        playerAttack = playerAttack + 6;
+        playerMoney = playerMoney - 7;
+          }
+          else {
+            window.alert("You don't have enough moeney!");
+          }
+
+        break;
+        case "LEAVE":
+        case "leave":
+          window.alert("Leaving the store.");
+
+        //do nothing, so funtion will end
+        break;
+        default:
+          window.alert("You did not pick a valid option. Try again");
+
+        //call shop() again and force player to pick a valid option
+        shop();
+        break;
+    }
+  };
+
+
+// start first game when page loads
 startGame();
 
 
